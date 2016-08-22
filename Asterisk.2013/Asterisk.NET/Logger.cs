@@ -72,16 +72,6 @@ namespace AsterNET
             return string.Concat(mb.DeclaringType.Name, ":", mb.Name);
         }
 
-        /// <summary>
-        ///     Get visibility for message level of class:method
-        /// </summary>
-        /// <param name="debugClass">messageType:class:method</param>
-        /// <returns></returns>
-        public bool IsVisible(MessageLevel messageLevel, string classMethod)
-        {
-            return isVisible(messageLevel, classMethod.GetHashCode());
-        }
-
         private bool isVisible(MessageLevel messageLevel, int hash)
         {
             switch (messageLevel)
@@ -96,57 +86,6 @@ namespace AsterNET
                     return (visibleWarning.ContainsKey(hash) ? (bool) visibleWarning[hash] : visibleWarningDef);
             }
             return true;
-        }
-
-        /// <summary>
-        ///     Set visibility for message level of class:method
-        /// </summary>
-        /// <param name="visible">visible</param>
-        /// <param name="messageLevel">message level</param>
-        /// <param name="classMethod">class:method</param>
-        public void Visible(bool visible, MessageLevel messageLevel, string classMethod)
-        {
-            int hash = classMethod.GetHashCode();
-            switch (messageLevel)
-            {
-                case MessageLevel.Debug:
-                    visibleDebug[hash] = visible;
-                    return;
-                case MessageLevel.Error:
-                    visibleError[hash] = visible;
-                    return;
-                case MessageLevel.Info:
-                    visibleInfo[hash] = visible;
-                    return;
-                case MessageLevel.Warning:
-                    visibleWarning[hash] = visible;
-                    return;
-            }
-        }
-
-        /// <summary>
-        ///     Set visibility for message level of class:method
-        /// </summary>
-        /// <param name="visible">visible</param>
-        /// <param name="messageLevel">message level</param>
-        /// <param name="classMethod">class:method</param>
-        public void Visible(bool visible, MessageLevel messageLevel)
-        {
-            switch (messageLevel)
-            {
-                case MessageLevel.Debug:
-                    visibleDebugDef = visible;
-                    return;
-                case MessageLevel.Error:
-                    visibleErrorDef = visible;
-                    return;
-                case MessageLevel.Info:
-                    visibleInfoDef = visible;
-                    return;
-                case MessageLevel.Warning:
-                    visibleWarningDef = visible;
-                    return;
-            }
         }
 
         #region Debug
