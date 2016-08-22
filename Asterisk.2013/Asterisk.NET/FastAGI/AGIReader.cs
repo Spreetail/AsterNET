@@ -1,13 +1,14 @@
 using System.Collections.Generic;
 using System.IO;
 using AsterNET.IO;
+using Common.Logging;
 
 namespace AsterNET.FastAGI
 {
     public class AGIReader
     {
 #if LOGGER
-        private readonly Logger logger = Logger.Instance();
+        private readonly ILog logger = LogManager.GetCurrentClassLogger();
 #endif
         private readonly SocketConnection socket;
 

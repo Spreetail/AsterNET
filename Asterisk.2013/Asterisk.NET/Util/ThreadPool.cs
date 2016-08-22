@@ -2,6 +2,7 @@ using System.Threading;
 using System.Collections;
 using AsterNET.FastAGI;
 using System.Collections.Generic;
+using Common.Logging;
 
 namespace AsterNET.Util
 {
@@ -11,9 +12,9 @@ namespace AsterNET.Util
 	public class ThreadPool
 	{
 #if LOGGER
-		private Logger logger = Logger.Instance();
+        private readonly ILog logger = LogManager.GetCurrentClassLogger();
 #endif
-		private bool running;
+        private bool running;
 		private int numThreads;
 		private string name;
 		private List<AGIConnectionHandler> jobs;

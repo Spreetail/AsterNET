@@ -13,6 +13,7 @@ namespace AsterNET
     /// <summary>
     ///     Facade to hide details of the underlying logging system.
     /// </summary>
+    [Obsolete("Use nlog",true)]
     public sealed class Logger
     {
         public enum MessageLevel
@@ -53,7 +54,6 @@ namespace AsterNET
                 logger = new Logger();
             return logger;
         }
-
         private void writeLine(string type, string msg)
         {
             System.Diagnostics.Debug.Print("{0}[{1}] {2}", type, Thread.CurrentThread.Name, msg);

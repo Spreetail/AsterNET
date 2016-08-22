@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Web;
+using Common.Logging;
 
 namespace AsterNET.FastAGI
 {
@@ -15,7 +16,7 @@ namespace AsterNET.FastAGI
         #region Variables
 
 #if LOGGER
-        private Logger logger = Logger.Instance();
+        private readonly ILog logger = LogManager.GetCurrentClassLogger();
 #endif
         private string rawCallerId;
         private readonly Dictionary<string, string> request;

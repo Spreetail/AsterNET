@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading;
 using AsterNET.FastAGI.Command;
 using AsterNET.IO;
+using Common.Logging;
 
 namespace AsterNET.FastAGI
 {
@@ -14,9 +15,7 @@ namespace AsterNET.FastAGI
     /// </summary>
     public class AGIConnectionHandler
     {
-#if LOGGER
-        private readonly Logger logger = Logger.Instance();
-#endif
+        private readonly ILog logger = LogManager.GetCurrentClassLogger();
         private static readonly LocalDataStoreSlot _channel = Thread.AllocateDataSlot();
         private readonly SocketConnection socket;
         private readonly IMappingStrategy mappingStrategy;
@@ -67,45 +66,35 @@ namespace AsterNET.FastAGI
 
                 if (script != null)
                 {
-#if LOGGER
                     logger.Info("Begin AGIScript " + script.GetType().FullName + " on " + Thread.CurrentThread.Name);
-#endif
                     script.Service(request, channel);
-#if LOGGER
                     logger.Info("End AGIScript " + script.GetType().FullName + " on " + Thread.CurrentThread.Name);
-#endif
                 }
                 else
                 {
                     var error = "No script configured for URL '" + request.RequestURL + "' (script '" + request.Script +
                                 "')";
                     channel.SendCommand(new VerboseCommand(error, 1));
-#if LOGGER
                     logger.Error(error);
-#endif
                 }
             }
-            catch (AGIHangupException)
+            catch (AGIHangupException ex)
             {
+                logger.Error("runtime exception on agi hangup.", ex);
             }
-            catch (IOException)
+            catch (IOException ex)
             {
+                logger.Error("runtime exception on agiconnection run.", ex);
             }
             catch (AGIException ex)
             {
-#if LOGGER
                 logger.Error("AGIException while handling request", ex);
-#else
 				throw ex;
-#endif
             }
             catch (Exception ex)
             {
-#if LOGGER
                 logger.Error("Unexpected Exception while handling request", ex);
-#else
 				throw ex;
-#endif
             }
 
             Thread.SetData(_channel, null);
@@ -113,14 +102,14 @@ namespace AsterNET.FastAGI
             {
                 socket.Close();
             }
-#if LOGGER
             catch (IOException ex)
             {
                 logger.Error("Error on close socket", ex);
             }
-#else
-			catch { }
-#endif
+			catch (Exception ex) {
+                logger.Error("Error on close socket", ex);
+            }
+
         }
     }
 }

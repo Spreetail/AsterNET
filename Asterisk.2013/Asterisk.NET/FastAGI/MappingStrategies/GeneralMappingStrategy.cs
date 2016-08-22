@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
+using Common.Logging;
 
 namespace AsterNET.FastAGI.MappingStrategies
 {
@@ -89,7 +90,7 @@ namespace AsterNET.FastAGI.MappingStrategies
     public class GeneralMappingStrategy : IMappingStrategy
     {
 #if LOGGER
-        private Logger logger = Logger.Instance();
+        private readonly ILog logger = LogManager.GetCurrentClassLogger();
 #endif
         private List<ScriptMapping> mappings;
         private Dictionary<string, MappingAssembly> mapAssemblies;

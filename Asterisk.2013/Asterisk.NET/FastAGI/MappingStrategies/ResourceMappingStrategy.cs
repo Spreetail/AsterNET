@@ -1,7 +1,8 @@
-using System;	
+using System;
 using System.Collections;
 using System.Resources;
 using System.Reflection;
+using Common.Logging;
 
 namespace AsterNET.FastAGI.MappingStrategies
 {
@@ -18,9 +19,9 @@ namespace AsterNET.FastAGI.MappingStrategies
     public class ResourceMappingStrategy : IMappingStrategy
 	{
 #if LOGGER
-		private Logger logger = Logger.Instance();
+        private readonly ILog logger = LogManager.GetCurrentClassLogger();
 #endif
-		private string resourceName;
+        private string resourceName;
 		private Hashtable mapping;
 
 		public ResourceMappingStrategy()

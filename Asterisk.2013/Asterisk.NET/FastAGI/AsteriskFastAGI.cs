@@ -4,6 +4,7 @@ using System.Text;
 using AsterNET.FastAGI.MappingStrategies;
 using AsterNET.IO;
 using AsterNET.Util;
+using Common.Logging;
 
 namespace AsterNET.FastAGI
 {
@@ -28,7 +29,7 @@ namespace AsterNET.FastAGI
         #region Variables
 
 #if LOGGER
-        private readonly Logger logger = Logger.Instance();
+        private readonly ILog logger = LogManager.GetCurrentClassLogger();
 #endif
         private ServerSocket serverSocket;
 

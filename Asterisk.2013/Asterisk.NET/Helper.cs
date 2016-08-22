@@ -7,6 +7,7 @@ using System.Text;
 using AsterNET.Manager;
 using AsterNET.Manager.Event;
 using AsterNET.Manager.Response;
+using Common.Logging;
 
 namespace AsterNET
 {
@@ -14,7 +15,7 @@ namespace AsterNET
     {
         private static CultureInfo defaultCulture;
 #if LOGGER
-        private static readonly Logger logger = Logger.Instance();
+        private static readonly ILog logger = LogManager.GetCurrentClassLogger();
 #endif
 
         #region CultureInfo 
