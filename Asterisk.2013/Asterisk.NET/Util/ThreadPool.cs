@@ -11,9 +11,7 @@ namespace AsterNET.Util
 	/// </summary>
 	public class ThreadPool
 	{
-#if LOGGER
         private readonly ILog logger = LogManager.GetCurrentClassLogger();
-#endif
         private bool running;
 		private int numThreads;
 		private string name;
@@ -40,9 +38,8 @@ namespace AsterNET.Util
 				thread = new ThreadTask(this, this.name + "-TaskThread-" + i);
 				thread.Start();
 			}
-#if LOGGER
+
 			logger.Debug("ThreadPool created with " + this.numThreads + " threads.");
-#endif
 		}
 		#endregion
 
@@ -66,11 +63,8 @@ namespace AsterNET.Util
 					}
 					catch (ThreadInterruptedException ex)
 					{
-#if LOGGER
 						logger.Error("System.Threading.ThreadInterruptedException.", ex);
-#else
 						throw ex;
-#endif
 					}
 					if (jobs.Count > 0)
 					{
@@ -110,9 +104,7 @@ namespace AsterNET.Util
 			running = false;
 			lock (jobs)
 				Monitor.PulseAll(jobs);
-#if LOGGER
 			logger.Debug("ThreadPool shutting down.");
-#endif
 		}
 		#endregion
 	}

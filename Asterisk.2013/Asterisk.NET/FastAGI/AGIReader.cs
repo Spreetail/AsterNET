@@ -7,9 +7,9 @@ namespace AsterNET.FastAGI
 {
     public class AGIReader
     {
-#if LOGGER
+
         private readonly ILog logger = LogManager.GetCurrentClassLogger();
-#endif
+
         private readonly SocketConnection socket;
 
         public AGIReader(SocketConnection socket)
@@ -22,18 +22,17 @@ namespace AsterNET.FastAGI
             var lines = new List<string>();
             try
             {
-#if LOGGER
+
                 logger.Info("AGIReader.ReadRequest():");
-#endif
+
                 string line;
                 while ((line = socket.ReadLine()) != null)
                 {
                     if (line.Length == 0)
                         break;
                     lines.Add(line);
-#if LOGGER
                     logger.Info(line);
-#endif
+
                 }
             }
             catch (IOException ex)

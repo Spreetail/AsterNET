@@ -14,9 +14,8 @@ namespace AsterNET
     internal class Helper
     {
         private static CultureInfo defaultCulture;
-#if LOGGER
+
         private static readonly ILog logger = LogManager.GetCurrentClassLogger();
-#endif
 
         #region CultureInfo 
 
@@ -544,9 +543,7 @@ namespace AsterNET
                     // No setter found to key, try general parser
                     if (!o.Parse(name, attributes[name]))
                     {
-#if LOGGER
                         logger.Error("Unable to set property '" + name + "' on " + o.GetType() + ": no setter");
-#endif
                         throw new ManagerException("Parse error key '" + name + "' on " + o.GetType());
                     }
                 }
@@ -589,14 +586,11 @@ namespace AsterNET
                         }
                         catch (Exception ex)
                         {
-#if LOGGER
                             logger.Error(
                                 "Unable to convert value '" + attributes[name] + "' of property '" + name + "' on " +
                                 o.GetType() + " to required enum type " + dataType, ex);
-                            continue;
-#else
 							throw new ManagerException("Unable to convert value '" + attributes[name] + "' of property '" + name + "' on " + o.GetType() + " to required enum type " + dataType, ex); 
-#endif
+
                         }
                     }
                     else
@@ -608,14 +602,10 @@ namespace AsterNET
                         }
                         catch (Exception ex)
                         {
-#if LOGGER
                             logger.Error(
                                 "Unable to convert value '" + attributes[name] + "' of property '" + name + "' on " +
                                 o.GetType() + " to required type " + dataType, ex);
-                            continue;
-#else
 							throw new ManagerException("Unable to convert value '" + attributes[name] + "' of property '" + name + "' on " + o.GetType() + " to required type " + dataType, ex);
-#endif
                         }
                     }
 
@@ -625,11 +615,8 @@ namespace AsterNET
                     }
                     catch (Exception ex)
                     {
-#if LOGGER
                         logger.Error("Unable to set property '" + name + "' on " + o.GetType(), ex);
-#else
 						throw new ManagerException("Unable to set property '" + name + "' on " + o.GetType(), ex);
-#endif
                     }
                 }
             }
@@ -782,12 +769,8 @@ namespace AsterNET
                 }
                 catch (Exception ex)
                 {
-#if LOGGER
                     logger.Error("Unable to create new instance of " + eventType, ex);
-                    return null;
-#else
 					throw ex;
-#endif
                 }
             }
 

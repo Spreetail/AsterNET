@@ -6,7 +6,6 @@ using System.Threading;
 
 namespace AsterNET
 {
-#if LOGGER
 
     #region class LogFactory 
 
@@ -219,5 +218,4 @@ namespace AsterNET
 
     #endregion
 
-#endif
 }

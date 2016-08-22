@@ -15,9 +15,7 @@ namespace AsterNET.FastAGI
     {
         #region Variables
 
-#if LOGGER
         private readonly ILog logger = LogManager.GetCurrentClassLogger();
-#endif
         private string rawCallerId;
         private readonly Dictionary<string, string> request;
 

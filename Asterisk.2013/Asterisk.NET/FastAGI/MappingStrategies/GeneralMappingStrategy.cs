@@ -89,9 +89,7 @@ namespace AsterNET.FastAGI.MappingStrategies
     /// </summary>
     public class GeneralMappingStrategy : IMappingStrategy
     {
-#if LOGGER
         private readonly ILog logger = LogManager.GetCurrentClassLogger();
-#endif
         private List<ScriptMapping> mappings;
         private Dictionary<string, MappingAssembly> mapAssemblies;
 

@@ -108,9 +108,7 @@ namespace AsterNET.Manager
     {
         #region Variables
 
-#if LOGGER
         private readonly ILog logger = LogManager.GetCurrentClassLogger();
-#endif
         private long actionIdCount = 0;
         private string hostname;
         private int port;
@@ -1392,9 +1390,7 @@ namespace AsterNET.Manager
             enableEvents = false;
             if (reconnected)
             {
-#if LOGGER
                 logger.Error("Login during reconnect state.");
-#endif
                 throw new AuthenticationFailedException("Unable login during reconnect state.");
             }
 
@@ -1439,9 +1435,7 @@ namespace AsterNET.Manager
                 catch (Exception ex)
                 {
                     disconnect(true);
-#if LOGGER
                     logger.Error("Unable to create login key using MD5 Message Digest.", ex);
-#endif
                     throw new AuthenticationFailedException("Unable to create login key using MD5 Message Digest.", ex);
                 }
 
@@ -1456,13 +1450,9 @@ namespace AsterNET.Manager
                 // successfully logged in so assure that we keep trying to reconnect when disconnected
                 reconnectEnable = keepAlive;
 
-#if LOGGER
                 logger.Info("Successfully logged in");
-#endif
                 asteriskVersion = determineVersion();
-#if LOGGER
                 logger.Info("Determined Asterisk version: " + asteriskVersion);
-#endif
                 enableEvents = true;
                 ConnectEvent ce = new ConnectEvent(this);
                 ce.ProtocolIdentifier = this.protocolIdentifier;
@@ -2070,21 +2060,13 @@ namespace AsterNET.Manager
                 }
                 catch (UnauthorizedAccessException ex)
                 {
-#if LOGGER
                     logger.Error("Unable to retrieve property '" + name + "' of " + action.GetType(), ex);
-                    continue;
-#else
 					throw new ManagerException("Unable to retrieve property '" + name + "' of " + action.GetType(), ex);
-#endif
                 }
                 catch (TargetInvocationException ex)
                 {
-#if LOGGER
                     logger.Error("Unable to retrieve property '" + name + "' of " + action.GetType(), ex);
-                    continue;
-#else
 					throw new ManagerException("Unable to retrieve property '" + name + "' of " + action.GetType(), ex);
-#endif
                 }
 
                 if (value == null)
@@ -2249,14 +2231,9 @@ namespace AsterNET.Manager
                             md.Update(UTF8Encoding.UTF8.GetBytes(password));
                         key = Helper.ToHexString(md.DigestData);
                     }
-#if LOGGER
                     catch (Exception ex)
                     {
                         logger.Error("Unable to create login key using MD5 Message Digest", ex);
-#else
-					catch
-					{
-#endif
                         key = null;
                     }
                 }
