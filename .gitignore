@@ -197,3 +197,5 @@ FakesAssemblies/
 
 #Merge Crap
 *.orig
+
+Asterisk.2013/Documentation/Help/*
