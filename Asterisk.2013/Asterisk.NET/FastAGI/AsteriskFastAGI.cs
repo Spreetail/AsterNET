@@ -256,10 +256,19 @@ namespace AsterNET.FastAGI
             {
                 if (!stopped)
                 {
-                    logger.Error("IOException while waiting for connections (1).", ex);
+                    logger.Fatal("IOException while waiting for connections (1).", ex);
                     throw ex;
                 }
             }
+            catch (System.Net.Sockets.SocketException sex)
+            {
+                if (!stopped && sex.SocketErrorCode != System.Net.Sockets.SocketError.Interrupted)
+                {
+                    logger.Fatal("SocketException while waiting for connections (1).", sex);
+                    throw;
+                }
+            }
+
             finally
             {
                 if (serverSocket != null)
