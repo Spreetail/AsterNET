@@ -363,7 +363,6 @@
     <Compile Include="Manager\Response\ManagerResponse.cs" />
     <Compile Include="Manager\Exceptions\TimeoutException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Logger.cs" />
     <Compile Include="Util\MD5Support.cs" />
     <Compile Include="Util\ThreadClass.cs" />
     <Compile Include="Util\ThreadPool.cs" />
