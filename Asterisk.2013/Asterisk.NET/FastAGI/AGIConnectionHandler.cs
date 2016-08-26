@@ -89,12 +89,12 @@ namespace AsterNET.FastAGI
             catch (AGIException ex)
             {
                 logger.Error("AGIException while handling request", ex);
-				throw ex;
+				throw;
             }
             catch (Exception ex)
             {
                 logger.Error("Unexpected Exception while handling request", ex);
-				throw ex;
+				throw;
             }
 
             Thread.SetData(_channel, null);
