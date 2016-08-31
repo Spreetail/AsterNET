@@ -292,7 +292,8 @@ namespace AsterNET.FastAGI
         }
 
         #endregion
-
+        //TODO: add a graceful shutdown method here that will refuse new connections
+        //will closing serverSocket close all child sockets??
         #region Stop() 
 
         public void Stop()
