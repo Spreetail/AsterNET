@@ -296,6 +296,12 @@ namespace AsterNET.FastAGI
         //will closing serverSocket close all child sockets??
         #region Stop() 
 
+            //don't worry about handling new connections -- ideally the load balancer will be sending new connections to another process while this one empties.
+        public void GracefulStop() {
+            stopped = true;
+            this.pool.BlockingShutdown(120);
+            Stop();
+        }
         public void Stop()
         {
             stopped = true;
