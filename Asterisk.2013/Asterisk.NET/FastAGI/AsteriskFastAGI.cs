@@ -262,6 +262,7 @@ namespace AsterNET.FastAGI
             }
             catch (System.Net.Sockets.SocketException sex)
             {
+                //serverSocket.Close() throws a SocketInterruped SocketException.
                 if (!stopped && sex.SocketErrorCode != System.Net.Sockets.SocketError.Interrupted)
                 {
                     logger.Fatal("SocketException while waiting for connections (1).", sex);
@@ -276,6 +277,13 @@ namespace AsterNET.FastAGI
                     try
                     {
                         serverSocket.Close();
+                    }
+                    catch (System.Net.Sockets.SocketException sex)
+                    {
+                        if (!stopped && sex.SocketErrorCode != System.Net.Sockets.SocketError.Interrupted)
+                        {
+                            logger.Error("SocketException while waiting for connections (1).", sex);
+                        }
                     }
                     catch (IOException ex)
                     {

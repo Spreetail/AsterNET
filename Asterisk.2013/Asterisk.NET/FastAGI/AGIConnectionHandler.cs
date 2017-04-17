@@ -28,9 +28,8 @@ namespace AsterNET.FastAGI
         ///     Returns the AGIChannel associated with the current thread.
         /// </summary>
         /// <returns>the AGIChannel associated with the current thread or  null if none is associated.</returns>
-        internal static AGIChannel Channel
-        {
-            get { return (AGIChannel) Thread.GetData(_channel); }
+        internal static AGIChannel Channel {
+            get { return (AGIChannel)Thread.GetData(_channel); }
         }
 
         #endregion
@@ -65,33 +64,31 @@ namespace AsterNET.FastAGI
                 //eg. telnet to the service 
                 if (request.Request.Count > 0)
                 {
-                var channel = new AGIChannel(writer, reader, _SC511_CAUSES_EXCEPTION, _SCHANGUP_CAUSES_EXCEPTION);
-                AGIScript script = mappingStrategy.DetermineScript(request);
-                Thread.SetData(_channel, channel);
+                    var channel = new AGIChannel(writer, reader, _SC511_CAUSES_EXCEPTION, _SCHANGUP_CAUSES_EXCEPTION);
+                    AGIScript script = mappingStrategy.DetermineScript(request);
+                    Thread.SetData(_channel, channel);
 
-                if (script != null)
-                {
-                    logger.Info("Begin AGIScript " + script.GetType().FullName + " on " + Thread.CurrentThread.Name);
-                    script.Service(request, channel);
-                    logger.Info("End AGIScript " + script.GetType().FullName + " on " + Thread.CurrentThread.Name);
+                    if (script != null)
+                    {
+                        logger.Info("Begin AGIScript " + script.GetType().FullName + " on " + Thread.CurrentThread.Name);
+                        script.Service(request, channel);
+                        logger.Info("End AGIScript " + script.GetType().FullName + " on " + Thread.CurrentThread.Name);
+                    }
+                    else
+                    {
+                        var error = "No script configured for URL '" + request.RequestURL + "' (script '" + request.Script +
+                                    "')";
+                        channel.SendCommand(new VerboseCommand(error, 1));
+                        logger.Error(error);
+                    }
                 }
-                else
-                {
-                    var error = "No script configured for URL '" + request.RequestURL + "' (script '" + request.Script +
-                                "')";
-                    channel.SendCommand(new VerboseCommand(error, 1));
-                    logger.Error(error);
-                }
-            }
                 else
                 {
                     var error = "A connection was made with no requests";
-                    #if LOGGER
-                        logger.Error(error);
-                    #endif
+                    logger.Error(error);
                 }
             }
-            catch (AGIHangupException)
+            catch (AGIHangupException ex)
             {
                 logger.Error("runtime exception on agi hangup.", ex);
             }
@@ -102,27 +99,30 @@ namespace AsterNET.FastAGI
             catch (AGIException ex)
             {
                 logger.Error("AGIException while handling request", ex);
-				throw;
+                throw;
             }
             catch (Exception ex)
             {
                 logger.Error("Unexpected Exception while handling request", ex);
-				throw;
+                throw;
             }
-
-            Thread.SetData(_channel, null);
-            try
+            finally
             {
-                socket.Close();
-            }
-            catch (IOException ex)
-            {
-                logger.Error("Error on close socket", ex);
-            }
-			catch (Exception ex) {
-                logger.Error("Error on close socket", ex);
-            }
 
+                Thread.SetData(_channel, null);
+                try
+                {
+                    socket.Close();
+                }
+                catch (IOException ex)
+                {
+                    logger.Error("Error on close socket", ex);
+                }
+                catch (Exception ex)
+                {
+                    logger.Error("Error on close socket", ex);
+                }
+            }
         }
     }
 }
