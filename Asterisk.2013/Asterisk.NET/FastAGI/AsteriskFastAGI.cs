@@ -292,8 +292,7 @@ namespace AsterNET.FastAGI
         }
 
         #endregion
-        //TODO: add a graceful shutdown method here that will refuse new connections
-        //will closing serverSocket close all child sockets??
+
         #region Stop() 
 
             //don't worry about handling new connections -- ideally the load balancer will be sending new connections to another process while this one empties.
