@@ -60,6 +60,11 @@ namespace AsterNET.FastAGI
                 var reader = new AGIReader(socket);
                 var writer = new AGIWriter(socket);
                 AGIRequest request = reader.ReadRequest();
+
+                //Added check for when the request is empty
+                //eg. telnet to the service 
+                if (request.Request.Count > 0)
+                {
                 var channel = new AGIChannel(writer, reader, _SC511_CAUSES_EXCEPTION, _SCHANGUP_CAUSES_EXCEPTION);
                 AGIScript script = mappingStrategy.DetermineScript(request);
                 Thread.SetData(_channel, channel);
@@ -78,7 +83,15 @@ namespace AsterNET.FastAGI
                     logger.Error(error);
                 }
             }
-            catch (AGIHangupException ex)
+                else
+                {
+                    var error = "A connection was made with no requests";
+                    #if LOGGER
+                        logger.Error(error);
+                    #endif
+                }
+            }
+            catch (AGIHangupException)
             {
                 logger.Error("runtime exception on agi hangup.", ex);
             }

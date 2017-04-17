@@ -89,13 +89,18 @@ namespace AsterNET.Manager
 	public delegate void ConfbridgeLeaveEventHandler(object sender, Event.ConfbridgeLeaveEvent e);
 	public delegate void ConfbridgeEndEventHandler(object sender, Event.ConfbridgeEndEvent e);
 	public delegate void ConfbridgeTalkingEventHandler(object sender, Event.ConfbridgeTalkingEvent e);
-	public delegate void FailedACLEventHandler(object sender, Event.FailedACLEvent e);
-	public delegate void AttendedTransferEventHandler(object sender, Event.AttendedTransferEvent e);
-	public delegate void BlindTransferEventHandler(object sender, Event.BlindTransferEvent e);
-	public delegate void BridgeCreateEventHandler(object sender, Event.BridgeCreateEvent e);
-	public delegate void BridgeDestroyEventHandler(object sender, Event.BridgeDestroyEvent e);
-	public delegate void BridgeEnterEventHandler(object sender, Event.BridgeEnterEvent e);
-	public delegate void BridgeLeaveEventHandler(object sender, Event.BridgeLeaveEvent e);
+    public delegate void FailedACLEventHandler(object sender, Event.FailedACLEvent e);
+    public delegate void AttendedTransferEventHandler(object sender, Event.AttendedTransferEvent e);
+    public delegate void BlindTransferEventHandler(object sender, Event.BlindTransferEvent e);
+    public delegate void BridgeCreateEventHandler(object sender, Event.BridgeCreateEvent e);
+    public delegate void BridgeDestroyEventHandler(object sender, Event.BridgeDestroyEvent e);
+    public delegate void BridgeEnterEventHandler(object sender, Event.BridgeEnterEvent e);
+    public delegate void BridgeLeaveEventHandler(object sender, Event.BridgeLeaveEvent e);
+    public delegate void DialBeginEventHandler(object sender, Event.DialBeginEvent e);
+    public delegate void DialEndEventHandler(object sender, Event.DialEndEvent e);
+    public delegate void QueueCallerJoinEventHandler(object sender, Event.QueueCallerJoinEvent e);
+    public delegate void QueueCallerLeaveEventHandler(object sender, Event.QueueCallerLeaveEvent e);
+    public delegate void QueueMemberPauseEventHandler(object sender, Event.QueueMemberPauseEvent e);
 
 
 
@@ -157,16 +162,16 @@ namespace AsterNET.Manager
 		/// <summary> Default Slow Reconnect interval in milliseconds.</summary>
 		private int reconnectIntervalMax = 10000;
 
-		public char[] VAR_DELIMITER = { '|' };
+        public char[] VAR_DELIMITER = { '|' };
 
 		#endregion
 
-		/// <summary>
-		/// Allows you to specifiy how events are fired. If false (default) then
-		/// events will be fired in order. Otherwise events will be fired as they arrive and 
-		/// control logic in your application will need to handle synchronization.
-		/// </summary>
-		public bool UseASyncEvents = false;
+        /// <summary>
+        /// Allows you to specifiy how events are fired. If false (default) then
+        /// events will be fired in order. Otherwise events will be fired as they arrive and 
+        /// control logic in your application will need to handle synchronization.
+        /// </summary>
+	    public bool UseASyncEvents = false;
 
 		#region Events
 
@@ -370,6 +375,8 @@ namespace AsterNET.Manager
 		public event QueueMemberEventHandler QueueMember;
 		/// <summary>
 		/// A QueueMemberPausedEvent is triggered when a queue member is paused or unpaused.
+        /// <b>Replaced by : </b> <see cref="QueueMemberPauseEvent"/> since <see href="https://wiki.asterisk.org/wiki/display/AST/Asterisk+12+Documentation" target="_blank" alt="Asterisk 12 wiki docs">Asterisk 12</see>.<br/>
+        /// <b>Removed since : </b> <see href="https://wiki.asterisk.org/wiki/display/AST/Asterisk+13+Documentation" target="_blank" alt="Asterisk 13 wiki docs">Asterisk 13</see>.<br/>
 		/// </summary>
 		public event QueueMemberPausedEventHandler QueueMemberPaused;
 		/// <summary>
@@ -473,18 +480,44 @@ namespace AsterNET.Manager
 		/// </summary>
 		public event ConfbridgeTalkingEventHandler ConfbridgeTalking;
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public event FailedACLEventHandler FailedACL;
+        /// <summary>
+        /// 
+        /// </summary>
+        public event FailedACLEventHandler FailedACL;
 
-		public event AttendedTransferEventHandler AttendedTransfer;
-		public event BlindTransferEventHandler BlindTransfer;
+	    public event AttendedTransferEventHandler AttendedTransfer;
+        public event BlindTransferEventHandler BlindTransfer;
 
-		public event BridgeCreateEventHandler BridgeCreate;
-		public event BridgeDestroyEventHandler BridgeDestroy;
-		public event BridgeEnterEventHandler BridgeEnter;
-		public event BridgeLeaveEventHandler BridgeLeave;
+        public event BridgeCreateEventHandler BridgeCreate;
+        public event BridgeDestroyEventHandler BridgeDestroy;
+        public event BridgeEnterEventHandler BridgeEnter;
+        public event BridgeLeaveEventHandler BridgeLeave;
+
+        /// <summary>
+        /// Raised when a dial action has started.<br/>
+        /// </summary>
+        public event DialBeginEventHandler DialBegin;
+
+        /// <summary>
+        /// Raised when a dial action has completed.<br/>
+        /// </summary>
+        public event DialEndEventHandler DialEnd;
+
+        /// <summary>
+        /// Raised when a caller joins a Queue.<br/>
+        /// </summary>
+        public event QueueCallerJoinEventHandler QueueCallerJoin;
+
+        /// <summary>
+        /// Raised when a caller leaves a Queue.<br/>
+        /// </summary>
+        public event QueueCallerLeaveEventHandler QueueCallerLeave;
+
+        /// <summary>
+        /// A QueueMemberPauseEvent is triggered when a queue member is paused or unpaused.<br />
+        /// <b>Available since : </b> <see href="https://wiki.asterisk.org/wiki/display/AST/Asterisk+12+Documentation" target="_blank" alt="Asterisk 12 wiki docs">Asterisk 12</see>.
+        /// </summary>
+        public event QueueMemberPauseEventHandler QueueMemberPause;
 
 		#endregion
 
@@ -587,16 +620,20 @@ namespace AsterNET.Manager
 			Helper.RegisterEventHandler(registeredEventHandlers, 84, typeof(ConfbridgeEndEvent));
 			Helper.RegisterEventHandler(registeredEventHandlers, 85, typeof(ConfbridgeTalkingEvent));
 
-			Helper.RegisterEventHandler(registeredEventHandlers, 86, typeof(FailedACLEvent));
+            Helper.RegisterEventHandler(registeredEventHandlers, 86, typeof(FailedACLEvent));
 
-			Helper.RegisterEventHandler(registeredEventHandlers, 87, typeof(AttendedTransferEvent));
-			Helper.RegisterEventHandler(registeredEventHandlers, 88, typeof(BridgeCreateEvent));
-			Helper.RegisterEventHandler(registeredEventHandlers, 89, typeof(BridgeDestroyEvent));
-			Helper.RegisterEventHandler(registeredEventHandlers, 90, typeof(BridgeEnterEvent));
-			Helper.RegisterEventHandler(registeredEventHandlers, 91, typeof(BridgeLeaveEvent));
-			Helper.RegisterEventHandler(registeredEventHandlers, 92, typeof(BlindTransferEvent));
-
-
+            Helper.RegisterEventHandler(registeredEventHandlers, 87, typeof(AttendedTransferEvent));
+            Helper.RegisterEventHandler(registeredEventHandlers, 88, typeof(BridgeCreateEvent));
+            Helper.RegisterEventHandler(registeredEventHandlers, 89, typeof(BridgeDestroyEvent));
+            Helper.RegisterEventHandler(registeredEventHandlers, 90, typeof(BridgeEnterEvent));
+            Helper.RegisterEventHandler(registeredEventHandlers, 91, typeof(BridgeLeaveEvent));
+            Helper.RegisterEventHandler(registeredEventHandlers, 92, typeof(BlindTransferEvent));
+            Helper.RegisterEventHandler(registeredEventHandlers, 93, typeof(DialBeginEvent));
+            Helper.RegisterEventHandler(registeredEventHandlers, 94, typeof(DialEndEvent));
+            Helper.RegisterEventHandler(registeredEventHandlers, 95, typeof(QueueCallerJoinEvent));
+            Helper.RegisterEventHandler(registeredEventHandlers, 96, typeof(QueueCallerLeaveEvent));
+            Helper.RegisterEventHandler(registeredEventHandlers, 97, typeof(QueueMemberPauseEvent));
+            
 			#endregion
 
 			this.internalEvent += new ManagerEventHandler(internalEventHandler);
@@ -1172,48 +1209,78 @@ namespace AsterNET.Manager
 							ConfbridgeTalking(this, (ConfbridgeTalkingEvent)e);
 						}
 						break;
-					case 86:
-						if (FailedACL != null)
-						{
-							FailedACL(this, (FailedACLEvent)e);
-						}
-						break;
-					case 87:
-						if (AttendedTransfer != null)
-						{
-							AttendedTransfer(this, (AttendedTransferEvent)e);
-						}
-						break;
-					case 88:
-						if (BridgeCreate != null)
-						{
-							BridgeCreate(this, (BridgeCreateEvent)e);
-						}
-						break;
-					case 89:
-						if (BridgeDestroy != null)
-						{
-							BridgeDestroy(this, (BridgeDestroyEvent)e);
-						}
-						break;
-					case 90:
-						if (BridgeEnter != null)
-						{
-							BridgeEnter(this, (BridgeEnterEvent)e);
-						}
-						break;
-					case 91:
-						if (BridgeLeave != null)
-						{
-							BridgeLeave(this, (BridgeLeaveEvent)e);
-						}
-						break;
-					case 92:
-						if (BlindTransfer != null)
-						{
-							BlindTransfer(this, (BlindTransferEvent)e);
-						}
-						break;
+                    case 86:
+                        if (FailedACL != null)
+                        {
+                            FailedACL(this, (FailedACLEvent)e);
+                        }
+                        break;
+                    case 87:
+				        if (AttendedTransfer != null)
+				        {
+				            AttendedTransfer(this, (AttendedTransferEvent) e);
+				        }
+				        break;
+                    case 88:
+				        if (BridgeCreate != null)
+				        {
+				            BridgeCreate(this, (BridgeCreateEvent) e);
+				        }
+				        break;
+                    case 89:
+                        if (BridgeDestroy != null)
+                        {
+                            BridgeDestroy(this, (BridgeDestroyEvent)e);
+                        }
+                        break;
+                    case 90:
+                        if (BridgeEnter != null)
+                        {
+                            BridgeEnter(this, (BridgeEnterEvent)e);
+                        }
+                        break;
+                    case 91:
+                        if (BridgeLeave != null)
+                        {
+                            BridgeLeave(this, (BridgeLeaveEvent)e);
+                        }
+                        break;
+                    case 92:
+                        if (BlindTransfer != null)
+                        {
+                            BlindTransfer(this, (BlindTransferEvent)e);
+                        }
+                        break;
+                    case 93:
+                        if (DialBegin != null)
+                        {
+                            DialBegin(this, (DialBeginEvent)e);
+                        }
+                        break;
+                    case 94:
+                        if (DialEnd != null)
+                        {
+                            DialEnd(this, (DialEndEvent)e);
+                        }
+                        break;
+                    case 95:
+                        if (QueueCallerJoin != null)
+                        {
+                            QueueCallerJoin(this, (QueueCallerJoinEvent)e);
+                        }
+                        break;
+                    case 96:
+                        if (QueueCallerLeave != null)
+                        {
+                            QueueCallerLeave(this, (QueueCallerLeaveEvent)e);
+                        }
+                        break;
+                    case 97:
+                        if (QueueMemberPause != null)
+                        {
+                            QueueMemberPause(this, (QueueMemberPauseEvent)e);
+                        }
+                        break;
 					default:
 						if (UnhandledEvent != null)
 							UnhandledEvent(this, e);
@@ -1421,11 +1488,11 @@ namespace AsterNET.Manager
 				if (connect())
 				{
 					// Increase delay after connection up to 500 ms
-					Thread.Sleep(10 * sleepTime);   // 200 milliseconds delay
+					Thread.Sleep(10 * sleepTime);	// 200 milliseconds delay
 				}
 				try
 				{
-					Thread.Sleep(4 * sleepTime);    // 200 milliseconds delay
+					Thread.Sleep(4 * sleepTime);	// 200 milliseconds delay
 				}
 				catch
 				{ }
@@ -1500,43 +1567,43 @@ namespace AsterNET.Manager
 						if (m.Groups.Count >= 2)
 						{
 							version = m.Groups[1].Value;
-							if (version.StartsWith("1.4."))
-							{
-								VAR_DELIMITER = new char[] { '|' };
-								return AsteriskVersion.ASTERISK_1_4;
-							}
-							else if (version.StartsWith("1.6."))
-							{
-								VAR_DELIMITER = new char[] { '|' };
-								return Manager.AsteriskVersion.ASTERISK_1_6;
-							}
-							else if (version.StartsWith("1.8."))
-							{
-								VAR_DELIMITER = new char[] { '|' };
-								return Manager.AsteriskVersion.ASTERISK_1_8;
-							}
-							else if (version.StartsWith("10."))
-							{
-								VAR_DELIMITER = new char[] { '|' };
-								return Manager.AsteriskVersion.ASTERISK_10;
-							}
-							else if (version.StartsWith("11."))
-							{
-								VAR_DELIMITER = new char[] { ',' };
-								return Manager.AsteriskVersion.ASTERISK_11;
-							}
-							else if (version.StartsWith("12."))
-							{
-								VAR_DELIMITER = new char[] { ',' };
-								return Manager.AsteriskVersion.ASTERISK_12;
-							}
-							else if (version.StartsWith("13."))
-							{
-								VAR_DELIMITER = new char[] { ',' };
-								return Manager.AsteriskVersion.ASTERISK_13;
-							}
-							else
-								throw new ManagerException("Unknown Asterisk version " + version);
+                            if (version.StartsWith("1.4."))
+                            {
+                                VAR_DELIMITER = new char[] { '|' };
+                                return AsteriskVersion.ASTERISK_1_4;
+                            }
+                            else if (version.StartsWith("1.6."))
+                            {
+                                VAR_DELIMITER = new char[] { '|' };
+                                return Manager.AsteriskVersion.ASTERISK_1_6;
+                            }
+                            else if (version.StartsWith("1.8."))
+                            {
+                                VAR_DELIMITER = new char[] { '|' };
+                                return Manager.AsteriskVersion.ASTERISK_1_8;
+                            }
+                            else if (version.StartsWith("10."))
+                            {
+                                VAR_DELIMITER = new char[] { '|' };
+                                return Manager.AsteriskVersion.ASTERISK_10;
+                            }
+                            else if (version.StartsWith("11."))
+                            {
+                                VAR_DELIMITER = new char[] { ',' };
+                                return Manager.AsteriskVersion.ASTERISK_11;
+                            }
+                            else if (version.StartsWith("12."))
+                            {
+                                VAR_DELIMITER = new char[] { ',' };
+                                return Manager.AsteriskVersion.ASTERISK_12;
+                            }
+                            else if (version.StartsWith("13."))
+                            {
+                                VAR_DELIMITER = new char[] { ',' };
+                                return Manager.AsteriskVersion.ASTERISK_13;
+                            }
+                            else
+                                throw new ManagerException("Unknown Asterisk version " + version);
 						}
 					}
 				}
@@ -1580,33 +1647,33 @@ namespace AsterNET.Manager
 						logger.Info("Connect - Exception  : {0}", ex);
 						result = false;
 					}
-					if (result)
-					{
-						if (mrReader == null)
-						{
-							mrReader = new ManagerReader(this);
-							mrReaderThread = new Thread(mrReader.Run) { IsBackground = true, Name = "ManagerReader-" + DateTime.Now.Second };
-							mrReader.Socket = mrSocket;
-							startReader = true;
-						}
-						else
-						{
-							mrReader.Socket = mrSocket;
-						}
+                    if (result)
+                    {
+                        if (mrReader == null)
+                        {
+                            mrReader = new ManagerReader(this);
+                            mrReaderThread = new Thread(mrReader.Run) { IsBackground = true, Name = "ManagerReader-" + DateTime.Now.Second };
+                            mrReader.Socket = mrSocket;
+                            startReader = true;
+                        }
+                        else
+                        {
+                            mrReader.Socket = mrSocket;
+                        }
 
-						mrReader.Reinitialize();
-					}
-					else
-					{
-						mrSocket = null;
-					}
+                        mrReader.Reinitialize();
+                    }
+                    else
+                    {
+                        mrSocket = null;
+                    }
 				}
 			}
 
-			if (startReader)
-			{
-				mrReaderThread.Start();
-			}
+            if (startReader)
+            {
+                mrReaderThread.Start();
+            }
 
 			return IsConnected();
 		}
@@ -1715,7 +1782,7 @@ namespace AsterNET.Manager
 							if (connect())
 								break;
 						}
-						catch (Exception ex)
+						catch(Exception ex)
 						{
 							logger.Info("Connect exception.", ex);
 						}
@@ -2116,17 +2183,17 @@ namespace AsterNET.Manager
 				sb.Append(string.Concat(name, ": ", valueAsString, Common.LINE_SEPARATOR));
 			}
 
-			IActionVariable actionVar = action as IActionVariable;
-			if (actionVar != null)
-			{
-				var variables = actionVar.GetVariables();
-				if (variables != null && variables.Count > 0)
-				{
-					sb.Append(string.Concat("Variable: ", Helper.JoinVariables(actionVar.GetVariables(), VAR_DELIMITER, "="), Common.LINE_SEPARATOR));
-				}
-			}
+            IActionVariable actionVar = action as IActionVariable;
+            if ( actionVar != null )
+            {
+                var variables = actionVar.GetVariables();
+                if ( variables != null && variables.Count > 0 )
+                {
+                    sb.Append( string.Concat( "Variable: ", Helper.JoinVariables( actionVar.GetVariables(), VAR_DELIMITER, "=" ), Common.LINE_SEPARATOR ) );
+                }
+            }
 
-			sb.Append(Common.LINE_SEPARATOR);
+            sb.Append(Common.LINE_SEPARATOR);
 			return sb.ToString();
 		}
 		#endregion
@@ -2216,7 +2283,7 @@ namespace AsterNET.Manager
 					}
 				}
 			}
-
+			
 			if (response == null && buffer.ContainsKey("ping") && buffer["ping"] == "Pong")
 			{
 				response = Helper.BuildResponse(buffer);
@@ -2330,7 +2397,7 @@ namespace AsterNET.Manager
 						}
 						catch (SystemException ex)
 						{
-							logger.Error("Unexpected exception", ex);
+						logger.Error("Unexpected exception", ex);
 							throw ex;
 						}
 				}
@@ -2359,7 +2426,7 @@ namespace AsterNET.Manager
 					{
 						SendAction(challengeAction, null);
 					}
-					catch (Exception ex)
+					catch(Exception ex)
 					{
 						logger.Info("Send Challenge fail : ", ex);
 						disconnect(true);
@@ -2392,10 +2459,10 @@ namespace AsterNET.Manager
 		private void fireEvent(ManagerEvent e)
 		{
 			if (enableEvents && internalEvent != null)
-				if (UseASyncEvents)
-					internalEvent.BeginInvoke(this, e, new AsyncCallback(eventComplete), null);
-				else
-					internalEvent.Invoke(this, e);
+                if(UseASyncEvents)
+				    internalEvent.BeginInvoke(this, e, new AsyncCallback(eventComplete), null);
+                else
+                    internalEvent.Invoke(this, e);
 		}
 		#endregion
 	}

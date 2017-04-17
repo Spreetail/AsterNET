@@ -90,7 +90,7 @@ namespace AsterNET.Manager
 
 		#region mrReaderCallbback(IAsyncResult ar) 
 
-		//// <summary>
+		/// <summary>
 		/// Async Read callback
 		/// </summary>
 		/// <param name="ar">IAsyncResult</param>
@@ -180,7 +180,7 @@ namespace AsterNET.Manager
 
 		#region Run()
 
-		//// <summary>
+		/// <summary>
 		/// Reads line by line from the asterisk server, sets the protocol identifier as soon as it is
 		/// received and dispatches the received events and responses via the associated dispatcher.
 		/// </summary>
@@ -266,17 +266,18 @@ namespace AsterNET.Manager
 
 						if (processingCommandResult)
 						{
-							if (line == "--END COMMAND--")
+							string lineLower = line.ToLower(Helper.CultureInfo);
+							if (lineLower == "--end command--")
 							{
 								var commandResponse = new CommandResponse();
 								Helper.SetAttributes(commandResponse, packet);
+								commandList.Add(line);
 								commandResponse.Result = commandList;
 								processingCommandResult = false;
 								packet.Clear();
 								mrConnector.DispatchResponse(commandResponse);
 							}
-							string lineLower = line.ToLower(Helper.CultureInfo);
-							if (lineLower.StartsWith("privilege: ")
+							else if (lineLower.StartsWith("privilege: ")
 								|| lineLower.StartsWith("actionid: ")
 								|| lineLower.StartsWith("timestamp: ")
 								|| lineLower.StartsWith("server: ")
