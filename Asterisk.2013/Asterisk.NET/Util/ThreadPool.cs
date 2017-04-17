@@ -3,7 +3,6 @@ using System.Collections;
 using AsterNET.FastAGI;
 using System.Collections.Generic;
 using Common.Logging;
-using System.Linq;
 
 namespace AsterNET.Util
 {
@@ -17,7 +16,7 @@ namespace AsterNET.Util
 		private int numThreads;
 		private string name;
 		private List<AGIConnectionHandler> jobs;
-        private List<ThreadTask> runningThreads = new List<ThreadTask>();
+
 		#region Constructor - ThreadPool(string name, int numThreads) 
 		/// <summary>
 		/// Creates a new ThreadPool of numThreads size. These Threads are waiting
@@ -38,8 +37,7 @@ namespace AsterNET.Util
 				ThreadTask thread;
 				thread = new ThreadTask(this, this.name + "-TaskThread-" + i);
 				thread.Start();
-                runningThreads.Add(thread);
-            }
+			}
 
 			logger.Debug("ThreadPool created with " + this.numThreads + " threads.");
 		}
@@ -108,18 +106,6 @@ namespace AsterNET.Util
 				Monitor.PulseAll(jobs);
 			logger.Debug("ThreadPool shutting down.");
 		}
-
-        public bool BlockingShutdown(int timeoutSeconds)
-        {
-            int i = 0;
-            Shutdown();
-            for(i = 0;i<=timeoutSeconds; i++)
-            {
-                if (runningThreads.All(z => z.IsAlive == false))
-                    return true; //todo test, not sure if IsRUnning and IsAlive are equivalent.
-            }
-            return false;
-        }
 		#endregion
 	}
 }
