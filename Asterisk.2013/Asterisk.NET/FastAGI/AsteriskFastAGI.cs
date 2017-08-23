@@ -257,6 +257,18 @@ namespace AsterNET.FastAGI
                     pool.AddJob(connectionHandler);
                 }
             }
+            catch (System.Net.Sockets.SocketException sex)
+            {
+                //serverSocket.Close() throws a SocketInterruped SocketException. If we aren't marked as stopped, 
+                //throw it, but if we're marked as stopped this is expected behavior.
+                if (!stopped && sex.SocketErrorCode != System.Net.Sockets.SocketError.Interrupted)
+                {
+#if LOGGER
+                    logger.Error("IOException while waiting for connections (1).", sex);
+#endif
+                    throw;
+                }
+            }
             catch (IOException ex)
             {
                 if (!stopped)
