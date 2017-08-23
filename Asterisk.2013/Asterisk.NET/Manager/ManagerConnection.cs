@@ -2442,7 +2442,7 @@ namespace AsterNET.Manager
 		internal void DispatchEvent(ManagerEvent e)
 		{
 #if LOGGER
-			logger.Debug("Dispatching event: {0}", e);
+			logger.Debug("Dispatching event: {0}", e.GetType().Name);
 #endif
 
 			if (e is ResponseEvent)

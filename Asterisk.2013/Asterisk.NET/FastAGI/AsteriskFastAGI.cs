@@ -66,8 +66,7 @@ namespace AsterNET.FastAGI
         ///     This equals the maximum number of concurrent requests this AGIServer can serve.<br />
         ///     The default pool size is 10.
         /// </summary>
-        public int PoolSize
-        {
+        public int PoolSize {
             set { poolSize = value; }
         }
 
@@ -79,8 +78,7 @@ namespace AsterNET.FastAGI
         ///     Sets the TCP port to listen on for new connections.<br />
         ///     The default bind port is 4573.
         /// </summary>
-        public int BindPort
-        {
+        public int BindPort {
             set { port = value; }
         }
 
@@ -93,8 +91,7 @@ namespace AsterNET.FastAGI
         ///     The default mapping is a MappingStrategy.
         /// </summary>
         /// <seealso cref="MappingStrategy" />
-        public IMappingStrategy MappingStrategy
-        {
+        public IMappingStrategy MappingStrategy {
             set { mappingStrategy = value; }
         }
 
@@ -102,8 +99,7 @@ namespace AsterNET.FastAGI
 
         #region SocketEncoding 
 
-        public Encoding SocketEncoding
-        {
+        public Encoding SocketEncoding {
             get { return socketEncoding; }
             set { socketEncoding = value; }
         }

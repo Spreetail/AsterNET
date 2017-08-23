@@ -265,7 +265,7 @@ namespace AsterNET.Manager
 						lock (((ICollection) lineQueue).SyncRoot)
 							line = lineQueue.Dequeue().Trim();
 #if LOGGER
-						logger.Debug(line);
+						//logger.Debug(line);
 #endif
 
 						#region processing Response: Follows
