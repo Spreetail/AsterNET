@@ -242,8 +242,9 @@ namespace AsterNET.Manager
 										pingHandler = new ResponseHandler(new PingAction(), null);
 										mrConnector.SendAction(pingHandler.Action, pingHandler);
 									}
-									catch
+									catch(Exception pingEx)
 									{
+                                        logger.Debug("Ping Exception: " + pingEx.Message);
 										disconnect = true;
 										mrSocket = null;
 									}
