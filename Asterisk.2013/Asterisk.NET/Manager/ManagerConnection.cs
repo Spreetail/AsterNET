@@ -1946,10 +1946,30 @@ namespace AsterNET.Manager
 				return handler.Response;
 			throw new TimeoutException("Timeout waiting for response to " + action.Action);
 		}
-		#endregion
+        /// <summary>
+        /// Send action with timeout (milliseconds)
+        /// </summary>
+        /// <param name="action"></param>
+        /// <param name="timeOut">timeout in milliseconds</param>
+        /// <returns></returns>
+        public System.Threading.Tasks.Task<Response.ManagerResponse> SendActionAsync(ManagerAction action, int timeOut)
+        {
+            AutoResetEvent autoEvent = new AutoResetEvent(false);
+            ResponseHandler handler = new ResponseHandler(action, autoEvent);
+            return System.Threading.Tasks.Task.Factory.StartNew<ManagerResponse>(() =>
+            {
+                int hash = SendAction(action, handler);
+                bool result = autoEvent.WaitOne(timeOut <= 0 ? -1 : timeOut, true);
+                RemoveResponseHandler(handler);
+                if (result)
+                    return handler.Response;
+                throw new TimeoutException("Timeout waiting for response to " + action.Action);
+            });
+        }
+        #endregion
 
-		#region SendAction(action, responseHandler)
-		public int SendAction(ManagerAction action, ResponseHandler responseHandler)
+        #region SendAction(action, responseHandler)
+        public int SendAction(ManagerAction action, ResponseHandler responseHandler)
 		{
 			if (action == null)
 				throw new ArgumentException("Unable to send action: action is null.");
